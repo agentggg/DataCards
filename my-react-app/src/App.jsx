@@ -29,13 +29,13 @@ const fallbackFlashcards = [
 function CourseSelector({ onSelect }) {
   const courses = [
     { id: "python", label: "Python (Core)" },
-    { id: "javascript", label: "JavaScript" },
-    { id: "ict", label: "ICT Trading" },
-    { id: "bible", label: "Bible / Devotional" },
-    { id: "fvg", label: "ICT FVG" },
-    { id: "htmlcss", label: "HTML & CSS" },
-    { id: "ob", label: "ICT Order Block" },
-    { id: "mss", label: "Market Structure Shift" }
+    { id: "javascript", label: "JavaScript"},
+    { id: "htmlcss", label: "HTML & CSS"},
+    { id: "bible", label: "Bible / Devotional"},
+    { id: "ict", label: "Trading ICT Strategies" },
+    { id: "fvg", label: "Fair Value Gap (Day Trading)"},
+    { id: "ob", label: "Order Block (Day Trading)"},
+    { id: "mss", label: "Market Structure Shift (Day Trading)"}
   ];
 
   return (
