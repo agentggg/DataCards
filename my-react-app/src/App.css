@@ -1,0 +1,775 @@
+/* Make sure everything can center nicely */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #050816;
+  --card-bg: #0b1020;
+  --accent: #7c5cff;
+  --accent-soft: rgba(124, 92, 255, 0.18);
+  --accent-strong: #ff6bcb;
+  --text-main: #f9fafb;
+  --text-soft: #a3a7c2;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.65);
+  --radius-lg: 24px;
+  --transition-fast: 0.2s ease-out;
+  --transition-med: 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Reset margin & stretch root so centering works on all sizes */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Inter", sans-serif;
+  background: radial-gradient(circle at top, #101737 0, #050816 55%, #02010a 100%);
+  color: var(--text-main);
+}
+
+/* App container */
+
+.app-root {
+  height: 100vh;                 /* exact viewport height */
+  display: flex;
+  align-items: center;           /* horizontal center (with flex-direction:column on child) */
+  justify-content: center;       /* vertical center */
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.app-shell {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;                     /* spacing between header and card */
+}
+
+/* Logo top-right */
+
+.app-logo {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  z-index: 10;
+}
+
+.app-logo-mark {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: conic-gradient(
+    from 210deg,
+    #ff6bcb,
+    #7c5cff,
+    #3dd9ff,
+    #ffda7b,
+    #ff6bcb
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #050816;
+}
+
+.app-logo-text {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--text-soft);
+}
+
+/* Background glow */
+
+.app-bg-blur {
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124, 92, 255, 0.5), transparent 70%);
+  top: -120px;
+  right: -80px;
+  filter: blur(4px);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Header */
+
+.app-header {
+  text-align: center;
+  z-index: 1;
+  padding: 0 8px;
+}
+
+.app-title {
+  font-size: clamp(2rem, 3vw, 2.6rem);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  margin: 0 0 8px;
+  background: linear-gradient(120deg, #ffffff, #d1c9ff, #ffebfb);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.app-subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-soft);
+}
+
+.app-subtitle span {
+  color: var(--accent-strong);
+  font-weight: 600;
+}
+
+/* Main */
+
+.app-main {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0 8px;
+  z-index: 1;
+}
+
+/* Flashcard container */
+
+.flashcard-wrapper {
+  width: 100%;
+  max-width: 640px;
+  padding: 24px 20px 20px;
+  border-radius: 28px;
+  background: radial-gradient(circle at top left, rgba(124, 92, 255, 0.09), transparent 55%),
+    radial-gradient(circle at bottom right, rgba(255, 107, 203, 0.08), transparent 60%),
+    rgba(11, 16, 32, 0.96);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(18px);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Entry animation (visible when card changes) */
+
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-in {
+  animation: cardEnter 0.45s ease-out;
+}
+
+/* Chips / meta info */
+
+.flashcard-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+.chip-soft {
+  background: rgba(15, 23, 42, 0.9);
+  border-color: var(--border-subtle);
+  color: var(--text-soft);
+}
+
+.chip-accent {
+  background: var(--accent-soft);
+  border-color: rgba(124, 92, 255, 0.7);
+  color: #e7e3ff;
+}
+
+/* 3D Scene */
+
+.flashcard-scene {
+  perspective: 1400px;
+  width: 100%;
+  margin-bottom: 18px;
+}
+
+.flashcard {
+  position: relative;
+  width: 100%;
+  min-height: 240px;
+  transform-style: preserve-3d;
+  transition: transform var(--transition-med), box-shadow 0.3s ease-out;
+  cursor: pointer;
+}
+
+/* subtle idle float */
+@keyframes cardFloat {
+  0% {
+    transform: translateY(0) rotateY(0);
+  }
+  50% {
+    transform: translateY(-3px) rotateY(0.4deg);
+  }
+  100% {
+    transform: translateY(0) rotateY(0);
+  }
+}
+
+.flashcard:hover {
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.85);
+  animation: cardFloat 3s ease-in-out infinite;
+}
+
+.flashcard.is-flipped {
+  transform: rotateY(180deg) scale(1.02); /* 👈 bigger, clearer flip */
+}
+
+/* Card faces */
+
+.flashcard-face {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  backface-visibility: hidden;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  background: radial-gradient(circle at top, #161b3a 0, #070b18 55%, #050815 100%);
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+.flashcard-front {
+  z-index: 2;
+}
+
+.flashcard-back {
+  transform: rotateY(180deg);
+}
+
+/* Gradient overlays */
+
+.card-gradient-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top left, rgba(124, 92, 255, 0.18), transparent 60%),
+    radial-gradient(circle at bottom right, rgba(255, 107, 203, 0.16), transparent 65%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.card-gradient-overlay-back {
+  background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.14), transparent 55%),
+    radial-gradient(circle at bottom left, rgba(124, 92, 255, 0.2), transparent 60%);
+}
+
+/* Card content */
+
+.flashcard-content {
+  position: relative;
+  padding: 24px 20px 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.flashcard-label {
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  margin-bottom: 10px;
+  opacity: 0.9;
+}
+
+.flashcard-question,
+.flashcard-answer {
+  margin: 0 0 12px;
+  font-size: clamp(1.15rem, 1.5vw + 1rem, 1.6rem);
+  line-height: 1.35;
+}
+
+.flashcard-question {
+  font-weight: 650;
+}
+
+.flashcard-answer {
+  font-weight: 650;
+  color: #f3f4ff;
+}
+
+.flashcard-reasoning {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-soft);
+  margin: 6px 0 0;
+}
+
+.flashcard-hint {
+  margin-top: 10px;
+  font-size: 0.84rem;
+  color: var(--text-soft);
+  opacity: 0.95;
+}
+
+/* Controls */
+
+.flashcard-controls {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 16px;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.flashcard-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Buttons */
+
+.btn {
+  border-radius: 999px;
+  padding: 9px 18px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  background: linear-gradient(135deg, var(--accent), #a77bff);
+  color: #050816;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast),
+    background 0.2s ease-out, opacity 0.2s ease-out;
+  box-shadow: 0 10px 24px rgba(124, 92, 255, 0.4);
+  white-space: nowrap;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(124, 92, 255, 0.55);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 16px rgba(124, 92, 255, 0.4);
+}
+
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 10% -10%, rgba(255, 255, 255, 0.25), transparent 55%);
+  opacity: 0;
+  transition: opacity 0.22s ease-out;
+}
+
+.btn:hover::after {
+  opacity: 1;
+}
+
+.btn-secondary {
+  background: rgba(15, 23, 42, 0.9);
+  color: var(--text-main);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.8);
+  border: 1px solid var(--border-subtle);
+}
+
+.btn-secondary:hover {
+  background: rgba(24, 33, 63, 0.95);
+}
+
+.btn-outline {
+  background: transparent;
+  color: #e7e3ff;
+  border: 1px solid rgba(231, 227, 255, 0.55);
+  box-shadow: none;
+}
+
+.btn-outline:hover {
+  background: rgba(231, 227, 255, 0.08);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.4);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-soft);
+  border: 1px dashed rgba(148, 163, 184, 0.5);
+  box-shadow: none;
+}
+
+.btn-ghost:hover {
+  background: rgba(15, 23, 42, 0.9);
+  color: var(--text-main);
+}
+
+.btn:disabled,
+.btn[disabled] {
+  opacity: 0.4;
+  cursor: default;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Mobile-first responsiveness */
+
+@media (max-width: 640px) {
+  .app-root {
+    padding: 12px 10px;
+  }
+
+  .app-logo {
+    top: 10px;
+    right: 10px;
+    transform: scale(0.95);
+  }
+
+  .flashcard-wrapper {
+    padding: 18px 14px 16px;
+  }
+
+  .flashcard-controls {
+    grid-template-columns: 1fr;
+    row-gap: 10px;
+  }
+
+  .flashcard-actions {
+    justify-content: center;
+  }
+
+  .btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .flashcard {
+    min-height: 220px;
+  }
+}
+/* --- HARD CENTER THE WHOLE EXPERIENCE --- */
+
+.app-root {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;   /* center horizontally */
+  align-items: center;       /* center vertically */
+  padding: 16px;
+}
+
+/* Column that holds header + card */
+.app-shell {
+  width: 100%;
+  max-width: 720px;          /* center column width */
+  margin: 0 auto;            /* center in viewport */
+  display: flex;
+  flex-direction: column;
+  align-items: center;       /* center header text + card */
+  gap: 20px;
+}
+
+/* main area just centers the card */
+.app-main {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* card itself sits in the middle of that column */
+.flashcard-wrapper {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.flashcard {
+  position: relative;
+  width: 100%;
+  min-height: 240px;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1),
+              box-shadow 0.3s ease-out;
+  cursor: pointer;
+}
+
+/* bigger, clearer flip */
+.flashcard.is-flipped {
+  transform: rotateY(180deg) scale(1.03);
+}
+
+/* gentle float on hover (desktop) */
+@keyframes cardFloatStrong {
+  0%   { transform: translateY(0) rotateY(0); }
+  50%  { transform: translateY(-4px) rotateY(0.6deg); }
+  100% { transform: translateY(0) rotateY(0); }
+}
+
+.flashcard:hover:not(.is-flipped) {
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.9);
+  animation: cardFloatStrong 3s ease-in-out infinite;
+}
+/* Ensure Vite defaults or other styles can't mess with centering */
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+.course-selector {
+  width: 100%;
+  max-width: 640px;
+  text-align: center;
+}
+
+.course-tagline {
+  font-size: 0.95rem;
+  color: var(--text-soft);
+  margin-bottom: 18px;
+}
+
+.course-tagline span {
+  color: var(--accent-strong);
+  font-weight: 600;
+}
+
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 14px;
+}
+
+.course-card {
+  border-radius: 18px;
+  padding: 14px 12px;
+  border: 1px solid var(--border-subtle);
+  background: radial-gradient(circle at top left, rgba(124, 92, 255, 0.12), transparent 60%),
+    rgba(11, 16, 32, 0.95);
+  color: var(--text-main);
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, border-color 0.18s ease-out;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.course-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
+  border-color: rgba(124, 92, 255, 0.8);
+}
+
+.course-pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.9);
+  color: var(--text-soft);
+}
+
+.course-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.course-subtitle {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-soft);
+}
+
+/* Mobile tweak */
+@media (max-width: 640px) {
+  .course-card {
+    padding: 12px 10px;
+  }
+}
+.flashcard-page {
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+/* Back button */
+.btn-home {
+  align-self: flex-start;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease, background .25s ease;
+}
+
+.btn-home:hover {
+  transform: translateY(-1px);
+  background: rgba(24, 33, 63, 0.92);
+  box-shadow: 0 16px 40px rgba(124, 92, 255, 0.35);
+}
+
+.btn-home:active {
+  transform: translateY(0);
+  box-shadow: 0 8px 20px rgba(124, 92, 255, 0.2);
+}
+
+/* Mobile: center it instead of left */
+@media (max-width: 640px) {
+  .btn-home {
+    align-self: center;
+  }
+}
+
+/* ------------ Page-level wrapper for deck ------------ */
+
+.flashcard-page {
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+/* Back button styling (re-using the look we started earlier) */
+.btn-home {
+  align-self: flex-start;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease, background .25s ease;
+}
+
+.btn-home:hover {
+  transform: translateY(-1px);
+  background: rgba(24, 33, 63, 0.92);
+  box-shadow: 0 16px 40px rgba(124, 92, 255, 0.35);
+}
+
+.btn-home:active {
+  transform: translateY(0);
+  box-shadow: 0 8px 20px rgba(124, 92, 255, 0.2);
+}
+
+/* Mobile: center the button */
+@media (max-width: 640px) {
+  .btn-home {
+    align-self: center;
+  }
+}
+
+/* ------------ Animations for enter / exit ------------ */
+
+@keyframes flashcardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes flashcardFadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+}
+
+/* When deck first shows or course changes */
+.flashcard-page-enter {
+  animation: flashcardFadeIn 0.38s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+/* When going back home */
+.flashcard-page-exit {
+  animation: flashcardFadeOut 0.38s ease forwards;
+}
+
+/* Home / course selector enter animation */
+@keyframes homeFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.course-selector {
+  width: 100%;
+  max-width: 640px;
+  text-align: center;
+  animation: homeFadeIn 0.4s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
