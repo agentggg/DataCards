@@ -30,7 +30,7 @@ function CourseSelector({ onSelect }) {
   const courses = [
     { id: "python", label: "Python (Core)" },
     { id: "javascript", label: "JavaScript"},
-    { id: "htmlcss", label: "HTML & CSS"},
+    { id: "html_css", label: "HTML & CSS"},
     { id: "bible", label: "Bible / Devotional"},
     { id: "ict", label: "Trading ICT Strategies" },
     { id: "fvg", label: "Fair Value Gap (Day Trading)"},
