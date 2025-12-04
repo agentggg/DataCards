@@ -26,38 +26,127 @@ const fallbackFlashcards = [
 ];
 
 // 🔹 Simple course selector homepage
+// 🔹 Modern course selector homepage
 function CourseSelector({ onSelect }) {
   const courses = [
-    { id: "python", label: "Python (Core)" },
-    { id: "javascript", label: "JavaScript"},
-    { id: "html_css", label: "HTML & CSS"},
-    { id: "bible", label: "Bible / Devotional"},
-    { id: "ict", label: "Trading ICT Strategies" },
-    { id: "fvg", label: "Fair Value Gap (Day Trading)"},
-    { id: "ob", label: "Order Block (Day Trading)"},
-    { id: "mss", label: "Market Structure Shift (Day Trading)"}
+    { id: "python", label: "Python (Core)", filterId: "Coding" },
+    { id: "javascript", label: "JavaScript", filterId: "Coding" },
+    { id: "html_css", label: "HTML & CSS", filterId: "Frontend Development" },
+    { id: "ict", label: "Trading ICT Strategies", filterId: "Trading Concept"},
+    { id: "fvg", label: "Fair Value Gap", filterId: "Trading Concept" },
+    { id: "ob", label: "Order Block", filterId: "Trading Concept" },
+    { id: "mss", label: "Market Structure Shift", filterId: "Trading Concept" },
+    { id: "PDARRAY", label: "Premium / Discount Array", filterId: "Trading Concept" },
+    { id: "ICT-BB", label: "Breaker Block", filterId: "Trading Concept" },
+    { id: "ICT-InverseFVG", label: "Inverse FVG", filterId: "Trading Concept" },
+    { id: "ICT-Implied-FVG", label: "Implied FVG", filterId: "Trading Concept" },
+    { id: "ICT-BPR", label: "Balanced Price Range", filterId: "Trading Concept" },
+    { id: "ICT-Rejection-Block", label: "Rejection Block", filterId: "Trading Concept" },
+    { id: "ICT-Vaccum-Gap", label: "Vacuum Gap", filterId: "Trading Concept" },
+    { id: "ICT-Mitigration-Block", label: "Mitigation Block", filterId: "Trading Concept" }
   ];
+
+  // Group them a bit so it feels intentional
+  const codingCourse = courses.filter((c) =>
+    c.filterId == "Coding"
+  );
+    const frontendDevelopmentCourse = courses.filter((c) =>
+    c.filterId == "Frontend Development"
+  );
+    const ictConcept = courses.filter((c) =>
+    c.filterId == "Trading Concept"
+  );
+  // const ictConcept = courses.filter((c) =>
+  //   c.filterId.includes("Trading Concept")
+  // );
+  
+
+  const sections = [
+    { title: "Coding", items: codingCourse },
+    { title: "Frontend Development", items: frontendDevelopmentCourse },
+    { title: "Trading · Concepts", items: ictConcept }
+  ];
+
+  const [openSections, setOpenSections] = useState(() =>
+    sections.reduce((acc, section) => {
+      acc[section.title] = false; // start collapsed
+      return acc;
+    }, {})
+  );
+
+  const toggleSection = (title) => {
+    setOpenSections((prev) => ({
+      ...prev,
+      [title]: !prev[title],
+    }));
+  };
 
   return (
     <div className="course-selector">
-      <p className="course-tagline">
-        Choose a <span>course</span> to start your flashcard session.
-      </p>
-      <div className="course-grid">
-        {courses.map((course) => (
-          <button
-            key={course.id}
-            type="button"
-            className="course-card"
-            onClick={() => onSelect(course.id)}
-          >
-            <div className="course-pill">{course.id}</div>
-            <h2 className="course-title">{course.label}</h2>
-            <p className="course-subtitle">
-              Tap to load questions for <strong>{course.id}</strong>.
-            </p>
-          </button>
-        ))}
+      <div className="course-selector-header">
+        <p className="course-eyebrow">Pick your lane</p>
+        <h2 className="course-heading">
+          What do you want to <span>drill</span> today?
+        </h2>
+        <p className="course-tagline">
+          Tap a track to load a focused flashcard session. You can always come
+          back and switch lanes.
+        </p>
+      </div>
+
+      <div className="course-selector-panel">
+        {sections.map((section) => {
+          const isOpen = openSections[section.title];
+
+          return (
+            <section key={section.title} className="course-section">
+              <button
+                type="button"
+                className="course-section-header"
+                onClick={() => toggleSection(section.title)}
+              >
+                <span className="course-section-pill" />
+                <h3>{section.title}</h3>
+                <span className="course-section-chevron">
+                  {isOpen ? "▾" : "▸"}
+                </span>
+              </button>
+
+              {isOpen && (
+                <ul className="course-list">
+                  {section.items.map((course) => (
+                    <li key={course.id}>
+                      <button
+                        type="button"
+                        className="course-row"
+                        onClick={() => onSelect(course.id)}
+                      >
+                        <div className="course-row-left">
+                          <div className="course-row-icon">
+                            {course.id.slice(0, 2).toUpperCase()}
+                          </div>
+                          <div className="course-row-text">
+                            <span className="course-row-label">
+                              {course.label}
+                            </span>
+                            <span className="course-row-id">
+                              id: <code>{course.id}</code>
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="course-row-cta">
+                          <span>Start</span>
+                          <span className="course-row-arrow">↪</span>
+                        </div>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+          );
+        })}
       </div>
     </div>
   );
