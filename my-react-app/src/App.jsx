@@ -29,6 +29,7 @@ const fallbackFlashcards = [
 // 🔹 Modern course selector homepage
 function CourseSelector({ onSelect }) {
   const courses = [
+    { id: "bigo", label: "BigO Notation", filterId: "Computer Science" },
     { id: "python", label: "Python (Core)", filterId: "Coding" },
     { id: "javascript", label: "JavaScript", filterId: "Coding" },
     { id: "html_css", label: "HTML & CSS", filterId: "Frontend Development" },
@@ -56,15 +57,16 @@ function CourseSelector({ onSelect }) {
     const ictConcept = courses.filter((c) =>
     c.filterId == "Trading Concept"
   );
-  // const ictConcept = courses.filter((c) =>
-  //   c.filterId.includes("Trading Concept")
-  // );
+  const computerScienceConcept = courses.filter((c) =>
+    c.filterId.includes("Computer Science")
+  );
   
 
   const sections = [
     { title: "Coding", items: codingCourse },
     { title: "Frontend Development", items: frontendDevelopmentCourse },
-    { title: "Trading · Concepts", items: ictConcept }
+    { title: "Trading · Concepts", items: ictConcept },
+    { title: "Computer Science", items: computerScienceConcept }
   ];
 
   const [openSections, setOpenSections] = useState(() =>
