@@ -26,7 +26,6 @@ const fallbackFlashcards = [
 ];
 
 // 🔹 Simple course selector homepage
-// 🔹 Modern course selector homepage
 function CourseSelector({ onSelect }) {
   const courses = [
     { id: "bigo", label: "BigO Notation", filterId: "Computer Science" },
@@ -44,7 +43,14 @@ function CourseSelector({ onSelect }) {
     { id: "ICT-BPR", label: "Balanced Price Range", filterId: "Trading Concept" },
     { id: "ICT-Rejection-Block", label: "Rejection Block", filterId: "Trading Concept" },
     { id: "ICT-Vaccum-Gap", label: "Vacuum Gap", filterId: "Trading Concept" },
-    { id: "ICT-Mitigration-Block", label: "Mitigation Block", filterId: "Trading Concept" }
+    { id: "ICT-Mitigration-Block", label: "Mitigation Block", filterId: "Trading Concept" },
+
+    { id: "ros2", label: "Robotic", filterId: "Computer Vision" },
+    { id: "ml", label: "Machine Learning", filterId: "Computer Vision" },
+    { id: "yolo", label: "YOLO", filterId: "Computer Vision" },
+    { id: "opencv", label: "OpenCV", filterId: "Computer Vision" },
+    { id: "computer_vision_core", label: "Computer Vision Core", filterId: "Computer Vision" },
+    
   ];
 
   // Group them a bit so it feels intentional
@@ -60,13 +66,16 @@ function CourseSelector({ onSelect }) {
   const computerScienceConcept = courses.filter((c) =>
     c.filterId.includes("Computer Science")
   );
-  
+  const computerVisionConcept = courses.filter((c) =>
+    c.filterId.includes("Computer Vision")
+  );
 
   const sections = [
     { title: "Coding", items: codingCourse },
     { title: "Frontend Development", items: frontendDevelopmentCourse },
     { title: "Trading · Concepts", items: ictConcept },
-    { title: "Computer Science", items: computerScienceConcept }
+    { title: "Computer Science", items: computerScienceConcept },
+    { title: "Computer Vision", items: computerVisionConcept }
   ];
 
   const [openSections, setOpenSections] = useState(() =>
