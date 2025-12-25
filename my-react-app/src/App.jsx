@@ -60,6 +60,10 @@ function CourseSelector({ onSelect }) {
     { id: "ros2_coding", label: "ROS2 Coding", filterId: "Practical Coding" },
     { id: "advance_python_coding", label: "Advance Python Coding", filterId: "Practical Coding" },
     { id: "computer_vision_coding", label: "Computer Vision Coding", filterId: "Practical Coding" },
+
+    { id: "python_coding_literacy", label: "Easy Code Literacy", filterId: "Python Code Literacy" },
+
+    
   ];
 
   // Group them a bit so it feels intentiona
@@ -71,6 +75,7 @@ const ictConcept = courses.filter((c) => c.filterId === "Trading Concept");
 const computerScienceConcept = courses.filter((c) => c.filterId === "Computer Science");
 const computerVisionConcept = courses.filter((c) => c.filterId === "Computer Vision");
 const roboticConcept = courses.filter((c) => c.filterId === "Robotic");
+const pythonCodeLiteracy = courses.filter((c) => c.filterId === "Python Code Literacy");
 
   const sections = [
     { title: "Coding", items: codingCourse },
@@ -79,7 +84,8 @@ const roboticConcept = courses.filter((c) => c.filterId === "Robotic");
     { title: "Computer Science", items: computerScienceConcept },
     { title: "Computer Vision", items: computerVisionConcept },
     { title: "Robotic", items: roboticConcept },
-    { title: "Hands On Coding Skills", items: practicalCodingConcept }
+    { title: "Hands On Coding Skills", items: practicalCodingConcept },
+    { title: "Python Code Literacy", items: pythonCodeLiteracy }
   ];
 
   const [openSections, setOpenSections] = useState(() =>
