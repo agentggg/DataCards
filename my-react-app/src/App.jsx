@@ -56,9 +56,16 @@ function CourseSelector({ onSelect }) {
     { id: "opencv", label: "OpenCV", filterId: "Computer Vision" },
     { id: "computer_vision_core", label: "Computer Vision Core", filterId: "Computer Vision" },
     
+    { id: "yolo_coding", label: "YOLO Coding", filterId: "Practical Coding" },
+    { id: "ros2_coding", label: "ROS2 Coding", filterId: "Practical Coding" },
+    { id: "advance_python_coding", label: "Advance Python Coding", filterId: "Practical Coding" },
+    { id: "computer_vision_coding", label: "Computer Vision Coding", filterId: "Practical Coding" },
   ];
 
   // Group them a bit so it feels intentional
+  const practicalCoding = courses.filter((c)=>{
+    c.filterId == "Practical Coding"
+  })
   const codingCourse = courses.filter((c) =>
     c.filterId == "Coding"
   );
@@ -84,7 +91,8 @@ function CourseSelector({ onSelect }) {
     { title: "Trading · Concepts", items: ictConcept },
     { title: "Computer Science", items: computerScienceConcept },
     { title: "Computer Vision", items: computerVisionConcept },
-    { title: "Robotic", items: roboticConcept }
+    { title: "Robotic", items: roboticConcept },
+    { title: "Hands On Coding Skills", items: practicalCoding }
   ];
 
   const [openSections, setOpenSections] = useState(() =>
