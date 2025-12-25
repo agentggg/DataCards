@@ -2,9 +2,46 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
+import Prism from "prismjs";
+import "prismjs/themes/prism-tomorrow.css";
+import "prismjs/components/prism-python";
 
+function renderQuestionWithCode(text) {
+  const parts = String(text).split("\n\n");
+  if (parts.length < 2) return <span style={{ whiteSpace: "pre-wrap" }}>{text}</span>;
+
+  const title = parts[0];
+  const code = parts.slice(1).join("\n\n");
+
+  const highlighted = Prism.highlight(code, Prism.languages.python, "python");
+
+  return (
+    <>
+      <div style={{ whiteSpace: "pre-wrap" }}>{title}</div>
+
+      <pre className="codeblock">
+        <code
+          className="language-python"
+          dangerouslySetInnerHTML={{ __html: highlighted }}
+        />
+      </pre>
+    </>
+  );
+}
 // Optional fallback data if backend fails / is empty
 const fallbackFlashcards = [
+    {
+    "course":"python_coding_literacy",
+    "question":"What is this code doing?\n\nnumbers = [1, 2, 3, 4, 5]\nresult = [n * 2 for n in numbers if n > 3]",
+    "answer":"It creates a new list with values greater than 3 doubled.",
+    "reasoning":"The list comprehension filters numbers greater than 3 and applies multiplication by 2 to each remaining element."
+  },
+    {
+    "course":"python_coding_literacy",
+    "question":"What is this code doing?\n\ndef clean(data):\n    return [x for x in data if x is not None]",
+    "answer":"It removes None values from a list.",
+    "reasoning":"The list comprehension iterates over the input data and keeps only elements that are not None."
+  },
   {
     question: "What is a closure in JavaScript?",
     answer: "A closure is a function that remembers its outer variables.",
@@ -199,7 +236,9 @@ function Flashcard({ card, index, total, onNext, onPrev }) {
             <div className="card-gradient-overlay" />
             <div className="flashcard-content">
               <p className="flashcard-label">Tap “Answer” to flip</p>
-              <h2 className="flashcard-question">{card.question}</h2>
+              <div className="flashcard-question">
+                {renderQuestionWithCode(card.question)}
+              </div>
             </div>
           </div>
 

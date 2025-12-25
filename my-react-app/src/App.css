@@ -819,3 +819,22 @@ body {
   font-size: 0.9rem;
   color: var(--text-soft);
 }
+.codeblock {
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.35);
+  overflow-x: auto;
+
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.92rem;
+  line-height: 1.45;
+
+  white-space: pre;       /* preserves formatting */
+  tab-size: 2;
+}
+
+.flashcard-question {
+  white-space: normal;    /* keep the container normal */
+}
