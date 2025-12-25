@@ -826,7 +826,7 @@ body {
 /* ===== Code Block (Single source of truth) ===== */
 
 .codeblock {
-  position: relative; /* IMPORTANT: makes ::after anchor correctly on iOS */
+  position: relative; /* IMPORTANT:  makes ::after anchor correctly on iOS */
   margin-top: 14px;
   border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -896,7 +896,6 @@ body {
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
-  border-radius: 14px;            /* keeps swipe area rounded */
   touch-action: pan-x;            /* harmless on desktop; ignored on iOS if unsupported */
   transform: translateZ(0);       /* helps iOS treat it as a scroll layer */
 }

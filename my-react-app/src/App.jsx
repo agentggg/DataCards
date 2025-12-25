@@ -88,7 +88,8 @@ function AutoFitCode({ code, language }) {
         overflowX: "hidden",        // ❌ no horizontal scroll
         fontSize: "12px",           // ✅ mobile-safe
         lineHeight: "1.45",
-        margin: 0
+        margin: 0,
+  
       }}
     >
       <code
