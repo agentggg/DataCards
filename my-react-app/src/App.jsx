@@ -62,28 +62,15 @@ function CourseSelector({ onSelect }) {
     { id: "computer_vision_coding", label: "Computer Vision Coding", filterId: "Practical Coding" },
   ];
 
-  // Group them a bit so it feels intentional
-  const practicalCodingConcept = courses.filter((c)=>{
-    c.filterId == "Practical Coding"
-  })
-  const codingCourse = courses.filter((c) =>
-    c.filterId == "Coding"
-  );
-    const frontendDevelopmentCourse = courses.filter((c) =>
-    c.filterId == "Frontend Development"
-  );
-    const ictConcept = courses.filter((c) =>
-    c.filterId == "Trading Concept"
-  );
-  const computerScienceConcept = courses.filter((c) =>
-    c.filterId.includes("Computer Science")
-  );
-  const computerVisionConcept = courses.filter((c) =>
-    c.filterId.includes("Computer Vision")
-  );
-  const roboticConcept = courses.filter((c) =>
-    c.filterId.includes("Robotic")
-  );
+  // Group them a bit so it feels intentiona
+
+const practicalCodingConcept = courses.filter((c) => c.filterId === "Practical Coding");
+const codingCourse = courses.filter((c) => c.filterId === "Coding");
+const frontendDevelopmentCourse = courses.filter((c) => c.filterId === "Frontend Development");
+const ictConcept = courses.filter((c) => c.filterId === "Trading Concept");
+const computerScienceConcept = courses.filter((c) => c.filterId === "Computer Science");
+const computerVisionConcept = courses.filter((c) => c.filterId === "Computer Vision");
+const roboticConcept = courses.filter((c) => c.filterId === "Robotic");
 
   const sections = [
     { title: "Coding", items: codingCourse },
