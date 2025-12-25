@@ -63,7 +63,7 @@ function CourseSelector({ onSelect }) {
   ];
 
   // Group them a bit so it feels intentional
-  const practicalCoding = courses.filter((c)=>{
+  const practicalCodingConcept = courses.filter((c)=>{
     c.filterId == "Practical Coding"
   })
   const codingCourse = courses.filter((c) =>
@@ -92,7 +92,7 @@ function CourseSelector({ onSelect }) {
     { title: "Computer Science", items: computerScienceConcept },
     { title: "Computer Vision", items: computerVisionConcept },
     { title: "Robotic", items: roboticConcept },
-    { title: "Hands On Coding Skills", items: practicalCoding }
+    { title: "Hands On Coding Skills", items: practicalCodingConcept }
   ];
 
   const [openSections, setOpenSections] = useState(() =>
@@ -306,7 +306,6 @@ function App() {
           params: { course },          
           signal: controller.signal
         }); 
-        console.log("🚀 ~ fetchCards ~ res:", res.data)
         // const res = await axios.get("http://localhost:8000/get_flashcard", {
         //   params: { course },          // 👈 backend sees ?course=python (or javascript, etc.)
         //   signal: controller.signal
