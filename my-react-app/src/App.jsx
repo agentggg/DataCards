@@ -1,5 +1,5 @@
 // src/App.jsx
-import { useState, useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import "./App.css";
 import Prism from "prismjs";
@@ -367,9 +367,10 @@ function Flashcard({ card, index, total, onNext, onPrev }) {
                 <p className="flashcard-reasoning">{card.reasoning}</p>
               )}
               <a
-                href={`https://www.google.com/search?q=${encodeURIComponent(card.question)}ict`}
-                style={{ color: '#ffc107' }} // Bootstrap warning color
+                href={`https://www.google.com/search?q=${encodeURIComponent(card.question)}`}
                 target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: '#ffc107' }}
               >
                 Learn more
               </a>
