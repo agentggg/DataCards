@@ -109,23 +109,60 @@ function escapeHtml(str) {
 }
 
 function renderQuestionWithCode(text) {
-  const parts = String(text).split("\n\n");
-  if (parts.length < 2) return <span style={{ whiteSpace: "pre-wrap" }}>{text}</span>;
+  const input = String(text || "");
 
-  const title = parts[0];
-  const rawCode = parts.slice(1).join("\n\n");
+  // Match ```lang?\n...code...\n``` blocks anywhere in the string
+  const fenceRe = /```([a-z0-9_+-]+)?\s*\n([\s\S]*?)\n```/gi;
 
-  const fenced = stripFenceIfPresent(rawCode);
-  const language = fenced.lang || detectLanguage(title, fenced.code);
+  const nodes = [];
+  let lastIndex = 0;
+  let match;
+  let blockIndex = 0;
 
-  return (
-    <>
-      <div style={{ whiteSpace: "pre-wrap" }}>{title}</div>
-      <div className="codeblock-scroll">
-        <AutoFitCode code={fenced.code} language={language} />
+  while ((match = fenceRe.exec(input)) !== null) {
+    const [full, rawLang, code] = match;
+    const start = match.index;
+    const end = start + full.length;
+
+    // text before the block
+    const before = input.slice(lastIndex, start);
+    if (before) {
+      nodes.push(
+        <div key={`t-${blockIndex}-${lastIndex}`} style={{ whiteSpace: "pre-wrap" }}>
+          {before}
+        </div>
+      );
+    }
+
+    const lang = rawLang ? normalizeLang(rawLang) : detectLanguage(before, code);
+
+    // the code block
+    nodes.push(
+      <div key={`c-${blockIndex}-${start}`} className="codeblock-scroll">
+        <AutoFitCode code={code} language={lang} />
       </div>
-    </>
-  );
+    );
+
+    lastIndex = end;
+    blockIndex += 1;
+  }
+
+  // trailing text after the last block
+  const after = input.slice(lastIndex);
+  if (after) {
+    nodes.push(
+      <div key={`t-after-${lastIndex}`} style={{ whiteSpace: "pre-wrap" }}>
+        {after}
+      </div>
+    );
+  }
+
+  // If no fences at all, keep your original behavior
+  if (!nodes.length) {
+    return <span style={{ whiteSpace: "pre-wrap" }}>{input}</span>;
+  }
+
+  return <>{nodes}</>;
 }
 // Optional fallback data if backend fails / is empty
 const fallbackFlashcards = [
