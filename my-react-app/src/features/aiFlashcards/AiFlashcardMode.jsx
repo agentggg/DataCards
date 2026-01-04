@@ -9,8 +9,8 @@ import CourseSelect from "../flashcards/components/CourseSelect";
 // const AI_FLASHCARD_GRADE_ENDPOINT = "http://localhost:8000/grade_ai_answers";
 // const AI_FLASHCARD_LIST_ENDPOINT = "http://localhost:8000/get_ai_questions";
 
-const AI_FLASHCARD_GRADE_ENDPOINT = "https://jewel-moms-determine-hewlett.trycloudflare.com/grade_ai_answers";
-const AI_FLASHCARD_LIST_ENDPOINT = "https://jewel-moms-determine-hewlett.trycloudflare.com/get_ai_questions";
+const AI_FLASHCARD_GRADE_ENDPOINT = "https://big-gave-coordination-length.trycloudflare.com/grade_ai_answers";
+const AI_FLASHCARD_LIST_ENDPOINT = "https://big-gave-coordination-length.trycloudflare.com/get_ai_questions";
 
 function normalizeLang(v) {
   return String(v || "").trim().toLowerCase();
