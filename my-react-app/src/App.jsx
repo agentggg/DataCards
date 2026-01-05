@@ -3,6 +3,7 @@ import Home from "./pages/Home.jsx";
 import FlashcardMode from "./features/flashcards/FlashcardMode.jsx";
 import AiFlashcardMode from "./features/aiFlashcards/AiFlashcardMode.jsx";
 import LiveCoding from "./pages/LiveCoding.jsx";
+import "./App.css";
 
 function TopGlow() {
   const location = useLocation();
