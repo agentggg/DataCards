@@ -49,6 +49,16 @@ export default function AiFlashcardMode() {
 
   const [gradeResult, setGradeResult] = useState(null);
   const [gradeErr, setGradeErr] = useState("");
+  const [deckSeed, setDeckSeed] = useState(0);
+
+  function shuffleArray(arr) {
+    const a = Array.isArray(arr) ? [...arr] : [];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
 
   async function loadAll() {
     setLoading(true);
@@ -72,6 +82,8 @@ export default function AiFlashcardMode() {
         .filter((x) => x.id != null && x.language && x.question);
 
       setItems(cleaned);
+      // reshuffle deck order whenever we reload from the backend
+      setDeckSeed((s) => s + 1);
     } catch (e) {
       setErr(
         e?.response?.data?.error ||
@@ -95,15 +107,9 @@ export default function AiFlashcardMode() {
   const deck = useMemo(() => {
     const l = normalizeLang(language);
     const filtered = items.filter((x) => x.language === l);
-
-    filtered.sort((a, b) => {
-      const ai = Number(a.id ?? 0);
-      const bi = Number(b.id ?? 0);
-      return ai - bi;
-    });
-
-    return filtered;
-  }, [items, language]);
+    // stable shuffle: only changes when items/language change or deckSeed increments
+    return shuffleArray(filtered);
+  }, [items, language, deckSeed]);
 
   const current = deck[index] || null;
   const progress = deck.length ? Math.round(((index + 1) / deck.length) * 100) : 0;
@@ -117,6 +123,8 @@ export default function AiFlashcardMode() {
   function onPickLanguage(nextLang) {
     setLanguage(nextLang);
     setIndex(0);
+    // reshuffle the deck each time a new language is selected
+    setDeckSeed((s) => s + 1);
     resetQuestionState();
   }
 
