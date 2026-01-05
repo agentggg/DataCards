@@ -76,7 +76,7 @@ export default function AiFlashcardMode() {
       setErr(
         e?.response?.data?.error ||
           e?.message ||
-          "Could not load AI flashcards. Check endpoint + server."
+          "Could not load ModelQ AI Flashcards. Check endpoint + server."
       );
     } finally {
       setLoading(false);
@@ -175,7 +175,7 @@ export default function AiFlashcardMode() {
       <div className="pageHeader">
         <div>
           <div className="kicker">AI Mode</div>
-          <h2 className="pageTitle">AI Flashcards</h2>
+          <h2 className="pageTitle">ModelQ AI Flashcards</h2>
           <p className="pageSub">
             Pick a language, answer in your own words, then get a breakdown by model.
           </p>
@@ -192,14 +192,14 @@ export default function AiFlashcardMode() {
 
       {loading && (
         <div className="emptyState" style={{ marginTop: 16 }}>
-          <div className="emptyState__big">Loading AI flashcards…</div>
+          <div className="emptyState__big">Loading ModelQ AI Flashcards…</div>
           <div className="emptyState__sub">Pulling the latest questions.</div>
         </div>
       )}
 
       {!loading && err && (
         <div className="emptyState" style={{ marginTop: 16 }}>
-          <div className="emptyState__big">Could not load AI flashcards</div>
+          <div className="emptyState__big">Could not load ModelQ AI Flashcards</div>
           <div className="emptyState__sub">{err}</div>
           <div style={{ marginTop: 12, display: "flex", gap: 10 }}>
             <button className="actionBtn" type="button" onClick={loadAll}>

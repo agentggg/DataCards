@@ -122,8 +122,8 @@ export default function Home() {
         <ModeCard
           tone="ai"
           badge="AI"
-          title="AI Flashcards"
-          subtitle="Smarter feedback. Less guessing. More leveling up."
+          title="ModelQ - AI Flashcards"
+          subtitle="`Smarter feedback. Less guessing. More leveling up."
           onClick={() => nav("/ai-flashcards")}
         >
           <div className="chips">

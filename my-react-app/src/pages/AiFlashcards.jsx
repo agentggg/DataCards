@@ -58,7 +58,7 @@ export default function AiFlashcards() {
       <div className="pageHeader">
         <div>
           <div className="kicker">AI Mode</div>
-          <h2 className="pageTitle">AI Flashcards</h2>
+          <h2 className="pageTitle">ModelQ - AI Flashcards</h2>
           <p className="pageSub">Write your answer, submit, get feedback. No fear. Just reps.</p>
         </div>
         <Link className="backLink" to="/">← Home</Link>
