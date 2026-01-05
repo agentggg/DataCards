@@ -36,6 +36,15 @@ function buildGoogleLearnMoreUrl({ language, question }) {
   return `https://www.google.com/search?q=${encodeURIComponent(q)}`;
 }
 
+function shuffleArray(arr) {
+  const a = Array.isArray(arr) ? [...arr] : [];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 export default function AiFlashcardMode() {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
@@ -50,15 +59,6 @@ export default function AiFlashcardMode() {
   const [gradeResult, setGradeResult] = useState(null);
   const [gradeErr, setGradeErr] = useState("");
   const [deckSeed, setDeckSeed] = useState(0);
-
-  function shuffleArray(arr) {
-    const a = Array.isArray(arr) ? [...arr] : [];
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-  }
 
   async function loadAll() {
     setLoading(true);
@@ -107,12 +107,18 @@ export default function AiFlashcardMode() {
   const deck = useMemo(() => {
     const l = normalizeLang(language);
     const filtered = items.filter((x) => x.language === l);
+
     // stable shuffle: only changes when items/language change or deckSeed increments
     return shuffleArray(filtered);
   }, [items, language, deckSeed]);
 
   const current = deck[index] || null;
   const progress = deck.length ? Math.round(((index + 1) / deck.length) * 100) : 0;
+
+  useEffect(() => {
+    if (!deck.length) return;
+    if (index >= deck.length) setIndex(0);
+  }, [deck.length]);
 
   function resetQuestionState() {
     setTyped("");
