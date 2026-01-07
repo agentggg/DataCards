@@ -1,5 +1,35 @@
+import { useMemo, useState } from "react";
+
+function formatCourseLabel(raw) {
+  // turns: "ros2_launch_file" / "ict-bpr" / "beginner_python_coding_literacy"
+  // into: "Ros2 Launch File" / "Ict Bpr" / "Beginner Python Coding Literacy"
+  return String(raw || "")
+    .trim()
+    .replace(/[_-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .toLowerCase()
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
 export default function CourseSelect({ courses, selected, onSelect, countByCourse }) {
-  const hasCourses = Array.isArray(courses) && courses.length > 0;
+  const [q, setQ] = useState("");
+
+  const options = useMemo(() => {
+    const arr = Array.isArray(courses) ? courses : [];
+    return arr.map((value) => {
+      const label = formatCourseLabel(value);
+      const count = typeof countByCourse === "function" ? countByCourse(value) : null;
+      return { value, label, count };
+    });
+  }, [courses, countByCourse]);
+
+  const filtered = useMemo(() => {
+    const needle = String(q || "").trim().toLowerCase();
+    if (!needle) return options;
+    return options.filter((o) => o.label.toLowerCase().includes(needle));
+  }, [options, q]);
+
+  const selectedValue = String(selected || "");
 
   return (
     <div
@@ -14,35 +44,49 @@ export default function CourseSelect({ courses, selected, onSelect, countByCours
         Select a course
       </div>
 
-      {!hasCourses ? (
-        <div style={{ color: "rgba(15,23,42,0.70)", fontWeight: 700 }}>
-          No courses returned yet.
-        </div>
-      ) : (
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
-          {courses.map((c) => {
-            const isActive = String(selected || "") === String(c || "");
-            const count = typeof countByCourse === "function" ? countByCourse(c) : null;
+      {/* Search */}
+      <input
+        type="search"
+        value={q}
+        onChange={(e) => setQ(e.target.value)}
+        placeholder="Search courses…"
+        className="aiTextarea"
+        style={{
+          minHeight: 44,
+          resize: "none",
+          marginTop: 0,
+        }}
+      />
 
-            return (
-              <button
-                key={c}
-                type="button"
-                onClick={() => onSelect(c)}
-                className="miniBtn"
-                style={{
-                  background: isActive ? "rgba(37,99,235,0.92)" : "rgba(255,255,255,0.85)",
-                  color: isActive ? "white" : "rgba(15,23,42,0.86)",
-                  borderColor: isActive ? "rgba(37,99,235,0.30)" : "rgba(15,23,42,0.12)",
-                }}
-              >
-                {c}
-                {Number.isFinite(count) ? ` (${count})` : ""}
-              </button>
-            );
-          })}
+      {/* Dropdown (mobile-first) */}
+      <div style={{ marginTop: 10 }}>
+        <select
+          value={selectedValue}
+          onChange={(e) => onSelect(e.target.value)}
+          className="aiTextarea"
+          style={{
+            minHeight: 48,
+            appearance: "none",
+            WebkitAppearance: "none",
+            MozAppearance: "none",
+            cursor: "pointer",
+          }}
+        >
+          <option value="">Choose a course…</option>
+
+          {filtered.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+              {Number.isFinite(o.count) ? ` (${o.count})` : ""}
+            </option>
+          ))}
+        </select>
+
+        {/* Optional small helper row */}
+        <div style={{ marginTop: 8, color: "rgba(15,23,42,0.62)", fontWeight: 700, fontSize: 12 }}>
+          Showing {filtered.length} of {options.length}
         </div>
-      )}
+      </div>
     </div>
   );
 }

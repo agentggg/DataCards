@@ -25,6 +25,16 @@ export default function FlashcardMode() {
   const [flipped, setFlipped] = useState(false);
   const [showReasoning, setShowReasoning] = useState(false);
 
+  const [deckSeed, setDeckSeed] = useState(0);
+
+  function shuffleArray(arr) {
+    const a = Array.isArray(arr) ? [...arr] : [];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
   async function loadFlashcards() {
     setLoading(true);
     setErr("");
@@ -46,6 +56,7 @@ export default function FlashcardMode() {
         .filter((x) => x.question && x.answer && x.course);
 
       setItems(cleaned);
+      setDeckSeed((s) => s + 1); // reshuffle after reload
     } catch (e) {
       setErr(
         e?.response?.data?.error ||
@@ -66,18 +77,11 @@ export default function FlashcardMode() {
     return Array.from(set).sort((a, b) => a.localeCompare(b));
   }, [items]);
 
-  const deck = useMemo(() => {
-    const c = normalizeCourse(course);
-    const filtered = items.filter((x) => x.course === c);
-
-    filtered.sort((a, b) => {
-      const ai = Number(a.id ?? 0);
-      const bi = Number(b.id ?? 0);
-      return ai - bi;
-    });
-
-    return filtered;
-  }, [items, course]);
+const deck = useMemo(() => {
+  const c = normalizeCourse(course);
+  const filtered = items.filter((x) => x.course === c);
+  return shuffleArray(filtered);
+}, [items, course, deckSeed]);
 
   const current = deck[index] || null;
   const progress = deck.length ? Math.round(((index + 1) / deck.length) * 100) : 0;
@@ -90,6 +94,7 @@ export default function FlashcardMode() {
 
   function onPickCourse(nextCourse) {
     setCourse(nextCourse);
+    setDeckSeed((s) => s + 1); // reshuffle when switching courses
     resetDeckState();
   }
 
@@ -235,15 +240,19 @@ export default function FlashcardMode() {
                         Back to question
                       </button>
                     </div>
-
-                    {showReasoning && (
-                      <div className="aiIdeal" style={{ marginTop: 12 }}>
-                        <div className="aiIdeal__label">Reasoning</div>
-                        <div className="aiIdeal__text">
-                          {current.reasoning || "No reasoning provided."}
-                        </div>
-                      </div>
-                    )}
+{showReasoning && (
+  <div
+    key={`reasoning-${current?.id}-${showReasoning ? "on" : "off"}`}
+    className="aiIdeal"
+    style={{ marginTop: 12 }}
+    onClick={(e) => e.stopPropagation()}
+  >
+    <div className="aiIdeal__label">Reasoning</div>
+    <div className="aiIdeal__text">
+      {current.reasoning || "No reasoning provided."}
+    </div>
+  </div>
+)}
                   </div>
                 </div>
               </button>

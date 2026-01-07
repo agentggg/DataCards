@@ -612,6 +612,12 @@ a {
     radial-gradient(650px 280px at 20% 0%, rgba(37,99,235,0.10), transparent 60%),
     radial-gradient(650px 280px at 80% 0%, rgba(6,182,212,0.08), transparent 60%);
   pointer-events: none;
+  z-index: 0 !important;
+
+}
+.flipCard__face > * {
+  position: relative;
+  z-index: 1;
 }
 
 .flipCard__back {
@@ -788,6 +794,11 @@ a {
   border: 1px solid rgba(15, 23, 42, 0.10);
   background: rgba(255,255,255,0.76);
   padding: 12px;
+  position: relative;
+  z-index: 2;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform;
 }
 .aiIdeal__label {
   font-size: 12px;
@@ -996,6 +1007,10 @@ a {
 
 /* Mobile: stack each result row nicely */
 @media (max-width: 560px) {
+  .flipCard__back button.miniBtn {
+    width: 100%;
+    justify-content: center;
+  }
   .page {
     padding: 14px;
     border-radius: 22px;
@@ -1172,4 +1187,55 @@ a {
 .scorePill,
 .tag {
   white-space: normal;
+}
+/* ===========================
+   iOS SAFARI FLIP FIX + MOBILE-FIRST CARD
+   =========================== */
+
+/* iOS Safari needs WebKit backface + transform-style flags */
+.flipCard {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.flipCard__inner {
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+
+  /* Helps iOS rasterize correctly */
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* IMPORTANT: put webkit backface on BOTH faces */
+.flipCard__face {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  overflow: visible; /* was hidden; iOS can clip toggled content */
+  /* Helps prevent weird “ghosting” */
+  transform: translateZ(0);
+}
+
+/* Ensure the back face is explicitly rotated for Safari */
+.flipCard__back {
+  -webkit-transform: rotateY(180deg) translateZ(0);
+  transform: rotateY(180deg) translateZ(0);
+}
+
+/* Mobile-first typography sizing so text doesn’t explode */
+.flipCard__big {
+  font-size: clamp(18px, 4.8vw, 26px);
+  line-height: 1.18;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Make the card height flexible on mobile (avoid huge empty area) */
+.flipCard__inner {
+  min-height: 220px;
+}
+
+@media (min-width: 981px) {
+  .flipCard__inner {
+    min-height: 260px;
+  }
 }
