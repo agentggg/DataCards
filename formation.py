@@ -1,85 +1,558 @@
-[
-  {"course":"ros2","question":"What was the first sign of the ROS 2 communication problem?","answer":"Only /rosout and /parameter_events were visible.","reasoning":"This indicates node discovery is failing."},
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>DeckForge Uploader</title>
+    <link rel="stylesheet" href="styles.css" />
+  <style>
+    :root{
+      --bg: #0b0f17;
+      --panel: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.12);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.68);
+      --muted2: rgba(255,255,255,0.52);
+      --accent: #ea5a28;
+      --shadow: 0 18px 50px rgba(0,0,0,0.45);
+      --radius-xl: 18px;
+      --radius-lg: 14px;
+      --radius-md: 12px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
 
-  {"course":"ros2","question":"What command revealed the missing ROS 2 topics?","answer":"ros2 topic list","reasoning":"It shows all topics visible to the current node."},
+    *{ box-sizing: border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: var(--font);
+      color: var(--text);
+      background:
+        radial-gradient(1200px 800px at 20% 0%, rgba(234,90,40,0.14), transparent 55%),
+        radial-gradient(900px 700px at 85% 20%, rgba(120,170,255,0.10), transparent 60%),
+        var(--bg);
+    }
 
-  {"course":"ros2","question":"What does seeing only /rosout usually mean in ROS 2?","answer":"Discovery is not working.","reasoning":"Nodes cannot see each other without discovery."},
+    .app{ min-height:100%; display:flex; flex-direction:column; }
 
-  {"course":"ros2","question":"Which ROS 2 distribution was in use?","answer":"ROS 2 Jazzy","reasoning":"Different distros have different discovery defaults."},
+    .topbar{
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+      background: rgba(15, 20, 30, 0.55);
+    }
 
-  {"course":"ros2","question":"Which two machines needed to communicate?","answer":"Ubuntu desktop and Raspberry Pi","reasoning":"ROS 2 nodes must be on the same network domain."},
+    .brand{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 18px 16px;
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
 
-  {"course":"ros2","question":"Why does ROS 2 rely on multicast by default?","answer":"For automatic node discovery.","reasoning":"DDS uses multicast to find peers."},
+    .logo{
+      width:44px;
+      height:44px;
+      border-radius: 14px;
+      display:grid;
+      place-items:center;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      background: linear-gradient(135deg, rgba(234,90,40,0.95), rgba(234,90,40,0.55));
+      box-shadow: 0 12px 30px rgba(234,90,40,0.18);
+      user-select:none;
+    }
 
-  {"course":"ros2","question":"What common network issue blocks ROS 2 discovery?","answer":"Firewall blocking multicast or UDP traffic.","reasoning":"DDS requires open UDP ports."},
+    .brand-text h1{
+      margin:0;
+      font-size: 16px;
+      line-height: 1.2;
+      letter-spacing: 0.3px;
+    }
 
-  {"course":"ros2","question":"What firewall caused the communication failure?","answer":"Ubuntu firewall (ufw).","reasoning":"It blocked DDS discovery traffic."},
+    .brand-text p{
+      margin:4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
 
-  {"course":"ros2","question":"What fixed the ROS 2 visibility issue immediately?","answer":"Disabling or configuring the firewall.","reasoning":"It allowed DDS traffic through."},
+    .container{
+      width:100%;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 18px 16px 26px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
 
-  {"course":"ros2","question":"What ROS 2 warning hinted at discovery configuration?","answer":"ROS_LOCALHOST_ONLY is deprecated warning.","reasoning":"It pointed to discovery range settings."},
+    .card{
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, var(--panel), rgba(255,255,255,0.04));
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      overflow:hidden;
+    }
 
-  {"course":"ros2","question":"What replaced ROS_LOCALHOST_ONLY in newer ROS 2?","answer":"ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS.","reasoning":"They provide finer discovery control."},
+    .card-header{ margin-bottom: 12px; }
 
-  {"course":"ros2","question":"Why was static peer discovery introduced?","answer":"To work on networks without multicast.","reasoning":"Static peers use direct IP discovery."},
+    .card-header h2{
+      margin: 0 0 6px;
+      font-size: 15px;
+      letter-spacing: 0.2px;
+    }
 
-  {"course":"ros2","question":"What DDS implementation was forced for reliability?","answer":"CycloneDDS","reasoning":"It works well with static peers."},
+    .muted{ color: var(--muted); }
 
-  {"course":"ros2","question":"What environment variable defines ROS domain separation?","answer":"ROS_DOMAIN_ID","reasoning":"Nodes must share the same domain."},
+    .card-header p{
+      margin:0;
+      font-size: 13px;
+      color: var(--muted);
+    }
 
-  {"course":"ros2","question":"Why must ROS_DOMAIN_ID match on all machines?","answer":"Otherwise nodes cannot see each other.","reasoning":"Domains isolate ROS graphs."},
+    code{
+      font-family: var(--mono);
+      font-size: 0.95em;
+      color: rgba(255,255,255,0.86);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.10);
+      padding: 2px 6px;
+      border-radius: 10px;
+    }
 
-  {"course":"ros2","question":"What IP range were the machines using?","answer":"10.0.0.x LAN","reasoning":"They were on the same subnet."},
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
 
-  {"course":"ros2","question":"Why did ros2 node list initially show duplicates?","answer":"Multiple nodes shared the same name.","reasoning":"Duplicate names can cause conflicts."},
+    .field{ display:flex; flex-direction:column; gap: 7px; }
 
-  {"course":"ros2","question":"What tool confirmed rosbridge was running?","answer":"ros2 node list","reasoning":"It showed rosbridge_websocket and rosapi."},
+    label{ font-size: 12px; color: rgba(255,255,255,0.78); }
 
-  {"course":"ros2","question":"What port was rosbridge_websocket launched on?","answer":"9091","reasoning":"This port was exposed for WebSocket clients."},
+    .hint{ color: var(--muted2); font-size: 12px; line-height: 1.35; }
 
-  {"course":"ros2","question":"Why was rosbridge used instead of native ROS nodes?","answer":"To connect web-based and remote clients.","reasoning":"rosbridge enables JSON-over-WebSocket."},
+    input, textarea, select{
+      width:100%;
+      color: var(--text);
+      background: rgba(10, 14, 22, 0.55);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 12px;
+      outline: none;
+      transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+    }
 
-  {"course":"ros2","question":"What command launched rosbridge?","answer":"ros2 launch rosbridge_server rosbridge_websocket_launch.xml","reasoning":"It starts the WebSocket bridge."},
+    input::placeholder, textarea::placeholder{ color: rgba(255,255,255,0.35); }
 
-  {"course":"ros2","question":"Why did the Raspberry Pi not see topics at first?","answer":"Network discovery was blocked.","reasoning":"DDS traffic never reached it."},
+    input:focus, textarea:focus, select:focus{
+      border-color: rgba(234,90,40,0.60);
+      box-shadow: 0 0 0 4px rgba(234,90,40,0.18);
+    }
 
-  {"course":"ros2","question":"What confirmed the network itself was working?","answer":"Ping between machines succeeded.","reasoning":"Basic connectivity was fine."},
+    textarea{
+      min-height: 520px;
+      resize: vertical;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.55;
+      padding: 14px;
+    }
 
-  {"course":"ros2","question":"Why is ping not enough to verify ROS 2 connectivity?","answer":"ROS 2 requires UDP multicast.","reasoning":"Ping only tests ICMP."},
+    .meta-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top: 8px; }
 
-  {"course":"ros2","question":"What solved discovery without multicast?","answer":"Static peer configuration.","reasoning":"Peers connect directly by IP."},
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.78);
+      font-size: 12px;
+    }
 
-  {"course":"ros2","question":"Why was a one-time setup script created?","answer":"To standardize fixes across machines.","reasoning":"Manual steps are error-prone."},
+    .chip--soft{ background: rgba(234,90,40,0.10); border-color: rgba(234,90,40,0.22); }
 
-  {"course":"ros2","question":"What shell script feature ensured reliability?","answer":"set -euo pipefail","reasoning":"It stops on errors and undefined vars."},
+    .actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top: 14px; }
 
-  {"course":"ros2","question":"Why must terminals be restarted after env changes?","answer":"Environment variables load at shell startup.","reasoning":"Old shells keep old values."},
+    .btn{
+      appearance:none;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 13px;
+      cursor:pointer;
+      transition: transform 140ms ease, background 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+    }
 
-  {"course":"ros2","question":"What confirmed success after the fix?","answer":"Topics and nodes became visible.","reasoning":"Discovery was restored."},
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.09); }
+    .btn:active{ transform: translateY(0px); }
 
-  {"course":"ros2","question":"What ROS command verified node visibility?","answer":"ros2 node list","reasoning":"It shows active nodes."},
+    .btn--ghost{ background: rgba(255,255,255,0.04); }
 
-  {"course":"ros2","question":"What ROS command verified topic visibility?","answer":"ros2 topic list","reasoning":"It shows active topics."},
+    .btn--primary{
+      border-color: rgba(234,90,40,0.40);
+      background: linear-gradient(135deg, rgba(234,90,40,0.95), rgba(234,90,40,0.55));
+      box-shadow: 0 14px 30px rgba(234,90,40,0.16);
+    }
 
-  {"course":"ros2","question":"Why is firewall configuration preferred over disabling it?","answer":"For security.","reasoning":"ROS 2 should not expose all ports."},
+    .btn--primary:hover{ box-shadow: 0 18px 45px rgba(234,90,40,0.22); }
 
-  {"course":"ros2","question":"Which protocol does DDS primarily use?","answer":"UDP","reasoning":"It enables fast real-time communication."},
+    .divider{ height:1px; background: var(--border); margin: 18px 0; }
 
-  {"course":"ros2","question":"Why is UDP harder for firewalls than TCP?","answer":"It uses dynamic ports.","reasoning":"Firewalls struggle with DDS traffic."},
+    .status{ display:grid; grid-template-columns: 1fr; gap: 10px; }
 
-  {"course":"ros2","question":"What role did the Raspberry Pi play?","answer":"Remote ROS 2 node host.","reasoning":"It needed to subscribe and publish."},
+    .status-box{
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.05);
+      border-radius: var(--radius-lg);
+      padding: 12px 12px;
+      font-size: 13px;
+    }
 
-  {"course":"ros2","question":"Why was Jazzy sensitive to network config?","answer":"It enforces newer DDS policies.","reasoning":"Defaults are stricter."},
+    .status-box strong{ display:inline-block; margin-right: 6px; color: rgba(255,255,255,0.86); }
 
-  {"course":"ros2","question":"What lesson was learned about ROS 2 networking?","answer":"Discovery issues are usually network-related.","reasoning":"Code is rarely the root cause."},
+    #statusBox[data-type="loading"]{ border-color: rgba(234,90,40,0.35); background: rgba(234,90,40,0.08); }
+    #statusBox[data-type="success"]{ border-color: rgba(90, 200, 120, 0.35); background: rgba(90, 200, 120, 0.08); }
+    #statusBox[data-type="error"]{ border-color: rgba(255, 90, 90, 0.40); background: rgba(255, 90, 90, 0.08); }
+    #statusBox[data-type="info"]{ border-color: rgba(140, 170, 255, 0.35); background: rgba(140, 170, 255, 0.08); }
 
-  {"course":"ros2","question":"Why is static discovery ideal for robots?","answer":"Robots often run on restricted networks.","reasoning":"Multicast is unreliable in production."},
+    .preview{
+      margin-top: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      border-radius: var(--radius-lg);
+      padding: 12px;
+    }
 
-  {"course":"ros2","question":"What was the final confirmed root cause?","answer":"Ubuntu firewall blocking DDS traffic.","reasoning":"Once removed, everything worked."},
+    .preview-head{ display:flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; gap: 12px; }
 
-  {"course":"ros2","question":"What best practice emerged from this session?","answer":"Always verify network and firewall first.","reasoning":"It saves hours of debugging."},
+    .preview-list{
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
 
-  {"course":"ros2","question":"What key ROS 2 concept was reinforced?","answer":"DDS discovery underpins all communication.","reasoning":"Without it, ROS appears broken."},
+    .preview-item{
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(10, 14, 22, 0.55);
+      border-radius: 14px;
+      padding: 12px;
+    }
 
-  {"course":"ros2","question":"Why is documenting this process important?","answer":"It prevents repeating the same issue.","reasoning":"ROS networking problems recur often."}
-]
+    .preview-top{ display:flex; justify-content: space-between; align-items:center; gap:10px; margin-bottom: 8px; }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(234,90,40,0.22);
+      background: rgba(234,90,40,0.10);
+      font-size: 12px;
+      color: rgba(255,255,255,0.86);
+      max-width: 100%;
+    }
+
+    .idx{ font-family: var(--mono); font-size: 12px; color: rgba(255,255,255,0.55); }
+
+    .preview-item .q{ font-weight: 700; margin: 4px 0 8px; color: rgba(255,255,255,0.92); }
+
+    .preview-item .a, .preview-item .r{
+      font-size: 12.5px;
+      color: rgba(255,255,255,0.78);
+      line-height: 1.45;
+      margin: 4px 0 0;
+      word-break: break-word;
+    }
+
+    .preview-item .a span, .preview-item .r span{ color: rgba(255,255,255,0.92); font-weight: 700; }
+
+    .help-card[hidden]{ display:none; }
+
+    .codeblock{
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(10, 14, 22, 0.60);
+      border-radius: var(--radius-lg);
+      padding: 12px;
+      overflow:auto;
+    }
+
+    .codeblock pre{ margin:0; font-family: var(--mono); font-size: 12px; line-height: 1.55; color: rgba(255,255,255,0.84); }
+
+    .note{
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(234,90,40,0.18);
+      background: rgba(234,90,40,0.08);
+    }
+
+    .note h3{ margin:0 0 8px; font-size: 13px; }
+
+    .note ul{ margin:0; padding-left: 18px; color: rgba(255,255,255,0.80); font-size: 13px; line-height: 1.55; }
+
+    .footer{
+      margin-top:auto;
+      padding: 16px;
+      text-align:center;
+      color: var(--muted2);
+      font-size: 12px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: rgba(15, 20, 30, 0.35);
+    }
+
+    @media (max-width: 620px){
+      textarea{ min-height: 460px; }
+      .card{ padding: 16px; }
+    }
+  </style>
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo">DF</div>
+          <div class="brand-text">
+            <h1>DeckForge Uploader</h1>
+            <p>Bulk-submit JSON flashcard arrays to your API.</p>
+          </div>
+        </div>
+      </header>
+
+      <main class="container" role="main">
+        <form id="flashcardForm" class="card" autocomplete="off" spellcheck="false" novalidate>
+          <div class="card-header">
+            <h2>Flashcard JSON</h2>
+            <p class="muted">Paste your JSON array of flashcards here.</p>
+          </div>
+
+          <div class="grid">
+            <div class="field">
+              <label for="endpointSelect">Backend environment</label>
+              <select id="endpointSelect" name="endpointSelect" required>
+                <option value="" disabled selected>Select an endpoint…</option>
+                <option value="http://localhost:8000">Dev (localhost:8000)</option>
+                <option value="https://big-gave-coordination-length.trycloudflare.com">Fireon6 (Cloudflare)</option>
+                <option value="https://ict-agentofgod.pythonanywhere.com">Python Server (PythonAnywhere)</option>
+              </select>
+              <small class="hint">This selection determines where your JSON will be POSTed.</small>
+            </div>
+          </div>
+
+          <div class="field">
+            <textarea
+              id="jsonInput"
+              name="jsonInput"
+              placeholder='[{"q":"Question?","a":"Answer."}]'
+              spellcheck="false"
+              required
+            ></textarea>
+          </div>
+
+          <div class="actions">
+            <button id="btnValidate" type="button" class="btn btn--ghost">Validate JSON</button>
+            <button id="btnPreview" type="button" class="btn btn--ghost">Preview Cards</button>
+            <button id="btnHelp" type="button" class="btn btn--ghost">Help</button>
+            <button id="btnSend" type="submit" class="btn btn--primary">Submit</button>
+          </div>
+
+          <div id="statusBox" class="status-box" aria-live="polite" role="status"></div>
+
+          <div id="preview" class="preview" aria-live="polite" role="region" aria-label="Flashcard preview"></div>
+        </form>
+
+      <section class="card help-card" id="helpCard" hidden>
+        <div class="card-header">
+          <h2>Help &amp; Schema</h2>
+          <p class="muted">Click Help again to hide this panel.</p>
+        </div>
+
+        <div class="codeblock">
+          <pre>{
+  "q": "Question text",
+  "a": "Answer text",
+  "r": "Optional rationale",
+  "tags": ["optional", "tags"]
+}</pre>
+        </div>
+
+        <div class="note">
+          <h3>Notes</h3>
+          <ul>
+            <li>Each item must have <code>q</code> and <code>a</code> fields.</li>
+            <li><code>r</code> and <code>tags</code> are optional.</li>
+            <li>Submit an array of such objects.</li>
+          </ul>
+        </div>
+      </section>
+      </main>
+
+      <footer class="footer">
+        &copy; 2024 DeckForge
+      </footer>
+    </div>
+
+    <script>
+      (() => {
+        "use strict";
+
+        function $(id) {
+          return document.getElementById(id);
+        }
+
+        function setStatus(type, title, message) {
+          const box = $("statusBox");
+          box.dataset.type = type;
+          box.innerHTML = `<strong>${title}</strong> ${message}`;
+        }
+
+        function tryParseJSON(jsonString) {
+          try {
+            const o = JSON.parse(jsonString);
+            if (o && typeof o === "object") {
+              return { valid: true, value: o };
+            }
+          } catch (e) {}
+          return { valid: false, value: null };
+        }
+
+        function validateFlashcardsArray(arr) {
+          if (!Array.isArray(arr)) return false;
+          for (const item of arr) {
+            if (
+              typeof item !== "object" ||
+              item === null ||
+              typeof item.q !== "string" ||
+              typeof item.a !== "string"
+            ) {
+              return false;
+            }
+          }
+          return true;
+        }
+
+        function readAndValidatePayload() {
+          const jsonInput = $("jsonInput").value.trim();
+          if (!jsonInput) {
+            setStatus("error", "Empty input", "Please paste your JSON flashcard array.");
+            return null;
+          }
+
+          const parsed = tryParseJSON(jsonInput);
+          if (!parsed.valid) {
+            setStatus("error", "Invalid JSON", "Please enter valid JSON.");
+            return null;
+          }
+
+          const arr = parsed.value;
+
+          const valid = validateFlashcardsArray(arr);
+          if (!valid) {
+            setStatus("error", "Invalid flashcard data", "Each item must be an object with string fields 'q' and 'a'.");
+            return null;
+          }
+
+          setStatus("success", "Valid JSON", `Parsed ${arr.length} flashcard(s).`);
+          return arr;
+        }
+
+        function previewCards(cards) {
+          const preview = $("preview");
+          if (!cards || cards.length === 0) {
+            preview.innerHTML = "<p>No cards to preview.</p>";
+            return;
+          }
+          const listItems = cards.map((card, i) => {
+            const rationaleHtml = card.r ? `<div class="r"><span>Rationale:</span> ${card.r}</div>` : "";
+            const tagsHtml = Array.isArray(card.tags) && card.tags.length > 0
+              ? `<div class="tags"><span>Tags:</span> ${card.tags.join(", ")}</div>`
+              : "";
+            return `
+              <li class="preview-item">
+                <div class="preview-top">
+                  <span class="idx">#${i + 1}</span>
+                  ${tagsHtml}
+                </div>
+                <div class="q">${card.q}</div>
+                <div class="a"><span>Answer:</span> ${card.a}</div>
+                ${rationaleHtml}
+              </li>
+            `;
+          }).join("");
+          preview.innerHTML = `<ul class="preview-list">${listItems}</ul>`;
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+          const form = $("flashcardForm");
+          const validateBtn = $("btnValidate");
+          const previewBtn = $("btnPreview");
+          const helpBtn = $("btnHelp");
+          const sendBtn = $("btnSend");
+
+          const helpCard = $("helpCard");
+          helpBtn.addEventListener("click", () => {
+            const isHidden = helpCard.hasAttribute("hidden");
+            if (isHidden) {
+              helpCard.removeAttribute("hidden");
+              setStatus("info", "Help opened", "Schema and notes are now visible below.");
+            } else {
+              helpCard.setAttribute("hidden", "");
+              setStatus("info", "Help closed", "Schema and notes are hidden.");
+            }
+          });
+
+          validateBtn.addEventListener("click", () => {
+            readAndValidatePayload();
+          });
+
+          previewBtn.addEventListener("click", () => {
+            const cards = readAndValidatePayload();
+            if (cards) {
+              previewCards(cards);
+            }
+          });
+
+          form.addEventListener("submit", async (evt) => {
+            evt.preventDefault();
+
+            const endpoint = String($("endpointSelect").value || "").trim();
+            if (!endpoint) return setStatus("error", "Missing endpoint", "Select a backend environment.");
+
+            const cards = readAndValidatePayload();
+            if (!cards) return;
+
+            setStatus("loading", "Sending", `POSTing ${cards.length} flashcard(s) to backend...`);
+
+            try {
+              const response = await fetch(endpoint, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(cards),
+              });
+              if (!response.ok) {
+                const text = await response.text();
+                setStatus("error", `Error ${response.status}`, text || "Unknown error");
+                return;
+              }
+              setStatus("success", "Success", "Flashcards uploaded successfully.");
+            } catch (err) {
+              setStatus("error", "Network error", err.message || "Failed to send flashcards.");
+            }
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>
