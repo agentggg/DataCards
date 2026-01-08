@@ -1,3 +1,4 @@
+// src/features/liveCoding/LiveCoding.jsx
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -56,7 +57,15 @@ export default function LiveCoding() {
     const fnName = idx === 0 ? "reverseStr" : "sumArr";
     const results = c.tests.map((t) => {
       const r = safeRun(code, fnName, t.input);
-      if (!r.ok) return { pass: false, input: t.input, expected: t.output, got: r.error, error: true };
+      if (!r.ok) {
+        return {
+          pass: false,
+          input: t.input,
+          expected: t.output,
+          got: r.error,
+          error: true,
+        };
+      }
       const pass = JSON.stringify(r.result) === JSON.stringify(t.output);
       return { pass, input: t.input, expected: t.output, got: r.result, error: false };
     });
@@ -72,6 +81,50 @@ export default function LiveCoding() {
 
   const passedCount = report ? report.filter((x) => x.pass).length : 0;
 
+  // ------------------------------------------------------------
+  // UNDER DEVELOPMENT gate
+  // ------------------------------------------------------------
+  const UNDER_DEV = true; // flip to false when you're ready to launch
+
+  if (UNDER_DEV) {
+    return (
+      <div className="page">
+        <div className="pageHeader">
+          <div>
+            <div className="kicker">Code Mode 🚧</div>
+            <h2 className="pageTitle">Live Coding Flashcards</h2>
+            <p className="pageSub">
+              This section is currently under development. It’s being built for a safer, more polished “run code”
+              experience.
+            </p>
+          </div>
+          <Link className="backLink" to="/">
+            ← Home 🏠
+          </Link>
+        </div>
+
+        <div className="emptyState" style={{ marginTop: 16 }}>
+          <div className="emptyState__big">Under Development 🚧</div>
+          <div className="emptyState__sub">
+            Coming soon: better sandboxing, more challenges, and a smoother test runner.
+            <br />
+            (Right now this feature uses <span className="mono">new Function</span>, which is fine for demos but not ideal
+            for production.)
+          </div>
+
+          <div style={{ marginTop: 14, display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <Link className="actionBtn" to="/">
+              Back to Home
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ------------------------------------------------------------
+  // Normal UI (enabled when UNDER_DEV === false)
+  // ------------------------------------------------------------
   return (
     <div className="page">
       <div className="pageHeader">
@@ -80,7 +133,9 @@ export default function LiveCoding() {
           <h2 className="pageTitle">Live Coding Flashcards</h2>
           <p className="pageSub">Tiny challenges. Instant feedback. Your keyboard is the gym.</p>
         </div>
-        <Link className="backLink" to="/">← Home</Link>
+        <Link className="backLink" to="/">
+          ← Home
+        </Link>
       </div>
 
       <div className="codeLayout">
@@ -100,8 +155,12 @@ export default function LiveCoding() {
             />
 
             <div className="codeActions">
-              <button className="actionBtn" type="button" onClick={run}>Run Tests</button>
-              <button className="actionBtn actionBtn--ghost" type="button" onClick={next}>Next</button>
+              <button className="actionBtn" type="button" onClick={run}>
+                Run Tests
+              </button>
+              <button className="actionBtn actionBtn--ghost" type="button" onClick={next}>
+                Next
+              </button>
             </div>
           </div>
         </div>
@@ -110,9 +169,7 @@ export default function LiveCoding() {
           <div className="resultCard">
             <div className="resultCard__top">
               <div className="resultTitle">Results</div>
-              {report && (
-                <div className="scorePill">{passedCount}/{report.length} passed</div>
-              )}
+              {report && <div className="scorePill">{passedCount}/{report.length} passed</div>}
             </div>
 
             {!report ? (
@@ -133,7 +190,8 @@ export default function LiveCoding() {
                         <span className="muted">Expected:</span> {JSON.stringify(r.expected)}
                       </div>
                       <div className="resultLine">
-                        <span className="muted">Got:</span> {typeof r.got === "string" ? r.got : JSON.stringify(r.got)}
+                        <span className="muted">Got:</span>{" "}
+                        {typeof r.got === "string" ? r.got : JSON.stringify(r.got)}
                       </div>
                     </div>
                   </div>
@@ -143,8 +201,8 @@ export default function LiveCoding() {
           </div>
 
           <div className="miniNote">
-            Note: this “run” uses <span className="mono">new Function</span> for a simple demo.
-            For production, move execution into a sandboxed worker or backend.
+            Note: this “run” uses <span className="mono">new Function</span> for a simple demo. For production, move
+            execution into a sandboxed worker or backend.
           </div>
         </div>
       </div>

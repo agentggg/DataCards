@@ -1239,3 +1239,178 @@ a {
     min-height: 260px;
   }
 }
+/* -----------------------------
+   Onboarding Tour Overlay
+------------------------------ */
+/* ===========================
+   FIX: Tour overlay stacking
+   =========================== */
+
+.tourOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.tourBackdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;                  /* explicit */
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+}
+
+.tourCard {
+  position: relative;
+  z-index: 1;                  /* explicit */
+  width: min(560px, 92vw);
+  border-radius: 18px;
+  padding: 18px 18px 14px;
+  background: rgba(18, 18, 22, 0.92);
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+
+.tourTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.tourKicker {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tourPill {
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.10);
+}
+
+.tourX {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: inherit;
+  cursor: pointer;
+}
+
+.tourTitle {
+  font-size: 18px;
+  font-weight: 650;
+  margin-bottom: 8px;
+}
+
+.tourBody {
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0.92;
+}
+
+.tourFooter {
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.45;
+  opacity: 0.85;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.tourActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.tourActions__right {
+  display: flex;
+  gap: 10px;
+}
+
+.tourBtn {
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.10);
+  color: inherit;
+  cursor: pointer;
+}
+
+.tourBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.tourBtn--ghost {
+  background: rgba(255,255,255,0.04);
+}
+
+/* -----------------------------
+   Highlight target elements
+------------------------------ */
+.tourHighlight {
+  position: relative;
+  z-index: auto !important;     /* critical */
+  outline: 2px solid rgba(255,255,255,0.35);
+  outline-offset: 4px;
+  box-shadow: 0 0 0 6px rgba(255,255,255,0.06);
+  border-radius: 16px;
+  transition: box-shadow 160ms ease, outline 160ms ease;
+}
+
+/* ==============================
+   FIX: Tour text invisible
+   Paste at VERY END of App.css
+   ============================== */
+
+.tourCard,
+.tourCard * {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.tourKicker {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.tourBody {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.tourFooter {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.tourPill {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.tourX {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.tourBtn {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.tourBtn--ghost {
+  color: rgba(255, 255, 255, 0.90);
+}
